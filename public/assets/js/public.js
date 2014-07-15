@@ -177,7 +177,12 @@ jQuery(window).load(function() {
 				}
 
 				timer = window.setTimeout(function() { 
-					centerBox( id );
+					//if is a centered popup, center it
+					if( $box.hasClass('spu-centered') ) {
+
+						centerBox( id );
+							
+					}
 					toggleBox( id, true );					
 
 				}, triggerSeconds * 1000);
