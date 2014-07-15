@@ -1,12 +1,21 @@
 <?php
 /**
- * Popups.
  *
- * @package   Plugin_Name
- * @author    Your Name <email@example.com>
+ * Plugin Name: Social PopUP - Google+, Facebook and Twitter popup
+ * Plugin URI: http://www.timersys.com/plugins-wordpress/social-popup/
+ * Version: 1.0.0
+ * Description: This plugin will display a popup or splash screen when a new user visit your site showing a Google+, twitter and facebook follow links. This will increase you followers ratio in a 40%. Popup will be close depending on your settings. Check readme.txt for full details.
+ * Author: Damian Logghe
+ * Author URI: http://wp.timersys.com
+ * License: MIT License
+ * Text Domain: spu
+ * Domain Path: languages
+ *
+ * @package   Popups
+ * @author    Damian Logghe <info@timersys.com>
  * @license   GPL-2.0+
- * @link      http://example.com
- * @copyright 2014 Your Name or Company Name
+ * @link      http://wp.timersys.com
+ * @copyright 2014 Timersys
  */
 
 /**
@@ -18,8 +27,8 @@
  *
  * @TODO: Rename this class to a proper name for your plugin.
  *
- * @package Plugin_Name
- * @author  Your Name <email@example.com>
+ * @package Popups
+ * @author  Damian Logghe <info@timersys.com>
  */
 class SocialPopup {
 
