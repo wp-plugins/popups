@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags:  twitter,google+, facebook,Popups, twitter follow, facebook like, google plus,social boost, social splash, popup, facebook popup, scroll popups, popups, wordpress popup, wp popups
 Requires at least: 3.6
 Tested up to: 3.9.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 Text Domain: spucpt
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -29,19 +29,22 @@ There are multiple display filters that can be combined:
 
 = Available Settings =
 
-* You can also configure background opacity.
 * Choose from 5 different popup locations
+* Trigger popup after X seconds or after scrolling % of page
+* Auto hide the popup if the user scroll up
 * Change font color, background, borders, etc
+* You can also configure background opacity.
 * Days until popup shows again
+
 
 
 = Plugin's Official Site =
 
-Popups ([http://wp.timersys.com/free-plugins/social-popup/](http://wp.timersys.com/free-plugins/social-popup/))
+Popups ([http://wp.timersys.com/free-plugins/social-popup/](http://wp.timersys.com/free-plugins/popups/))
 
 = Github = 
 
-Fork me in https://github.com/timersys/social-popup/
+Fork me in https://github.com/timersys/popups/
 
 = Increase your twitter followers  =
 
@@ -61,6 +64,13 @@ Enhance your site by letting your users send Social Invitations ([http://wp.time
 
 
 == Changelog ==
+
+= 1.0.1 = 
+
+* Fixed mobile/tablets display rule and splitted in two new rules
+* Changed cookie script to a small one
+* Now public js is server minified
+* Removed min-width from the popup
 
 = 1.0.0 = 
 
