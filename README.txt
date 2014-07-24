@@ -62,6 +62,13 @@ Enhance your site by letting your users send Social Invitations ([http://wp.time
 
 3. Go to Popups menu and add as many popups as needed
 
+== Screenshots ==
+
+1. Popups Front end with default settings
+2. Popups Back end - visual editor
+3. Popups Back end - display rules and options
+4. Popups Back end - appearance
+
 
 == Changelog ==
 
@@ -84,10 +91,3 @@ Enhance your site by letting your users send Social Invitations ([http://wp.time
 
 * Recoded from scratch. This is a totally new plugin
 * Multiple popups are available now handled with custom post types
-
-
-
-== Screenshots ==
-
-1. Popups Front end
-2. Popups Back end
