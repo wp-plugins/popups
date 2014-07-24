@@ -21,11 +21,12 @@ There are multiple display filters that can be combined:
 * Show popup on specific pages, templates, posts, etc
 * Filter user from search engines
 * Filter users that never commented
-* Filter users via specific referrer
+* Filter users that arrived via another page on your site
 * Filter users via roles
 * Show popup to logged / non logged users
 * Show or not to mobile and tablet users
-
+* Show depending on post type, post template, post name, post format, post status and post taxonomy
+* Show depending on page template, if page is parent, page name, page type
 
 = Available Settings =
 
