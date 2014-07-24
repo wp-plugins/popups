@@ -47,6 +47,10 @@ Popups ([http://wp.timersys.com/free-plugins/social-popup/](http://wp.timersys.c
 
 Fork me in https://github.com/timersys/popups/
 
+= Install Multiple plugins at once with WpFavs  =
+
+Bulk plugin installation tool, import WP favorites and create your own lists ([http://wordpress.org/extend/plugins/wpfavs/](http://wordpress.org/extend/plugins/wpfavs/))
+
 = Increase your twitter followers  =
 
 Increase your Twitter followers with Twitter likebox Plugin ([http://wordpress.org/extend/plugins/twitter-like-box-reloaded/](http://wordpress.org/extend/plugins/twitter-like-box-reloaded/))
