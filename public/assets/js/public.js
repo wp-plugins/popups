@@ -26,18 +26,21 @@ jQuery(window).load(function() {
 			var testMode 		= (parseInt($box.data('test-mode')) === 1);
 			var id 				= $box.data('box-id');
 			var autoHide 		= (parseInt($box.data('auto-hide')) === 1);
-			var advancedClose   = (parseInt($box.data('advanced-close')) === 1);
-			var secondsClose    = parseInt($box.data('seconds-close'));
+			var secondsClose    = parseInt($box.data('seconds-close'));			
+			var triggerSeconds 	= parseInt( $box.data('trigger-number'), 10 );
+			var triggerPercentage = ( triggerMethod == 'percentage' ) ? ( parseInt( $box.data('trigger-number'), 10 ) / 100 ) : 0.8;
+			var triggerHeight 	= ( triggerPercentage * $(document).height() );
 			
 			//correct widths of sharing icons
 			$('.spu-google').width($('.spu-google').width()-20);
 			$('.spu-twitter').width($('.spu-twitter').width()-12);
+			
 			//center spu-shortcodes
 			var swidth 		= 0;
 			var free_width 	= 0;
 			var cwidth 		= $(this).find(".spu-content").width();
 			var total  		= $box.data('total'); //total of shortcodes used
-			if( total ){ 
+			if( total && ! spuvar.disable_style ){ 
 			
 				//calculate total width of shortcodes all togheter
 				$(this).find(".spu-shortcode").each(function(){
@@ -73,46 +76,31 @@ jQuery(window).load(function() {
 				}
 			}
 
-			if ( advancedClose ) {
-				//close with esc
-				$(document).keyup(function(e) {
-					if (e.keyCode == 27) {
-						toggleBox( id, false );
-					}
-				});
-				//close on ipads // iphones
-				var ua = navigator.userAgent,
-				event = (ua.match(/iPad/i) || ua.match(/iPhone/i)) ? "touchstart" : "click";
-				
-				$('body').on(event, function (ev) {
-					console.log(event.target);
+			
+			//close with esc
+			$(document).keyup(function(e) {
+				if (e.keyCode == 27) {
 					toggleBox( id, false );
-				});
-				//not on the box
-				$('.spu-box' ).on(event, function(event) {
-					event.stopPropagation();
-				});
-			}
-			// Seconds left to close
-			// if( secondsClose > 0 )
-			// {
-			// 	spu_count= defaults.s_to_close;
-			// 	spu_counter = setInterval(function(){spu_timer(defaults)}, 1000);
-			// }
+				}
+			});
+			//close on ipads // iphones
+			var ua = navigator.userAgent,
+			event = (ua.match(/iPad/i) || ua.match(/iPhone/i)) ? "touchstart" : "click";
+			
+			$('body').on(event, function (ev) {
+				console.log(event.target);
+				toggleBox( id, false );
+			});
+			//not on the box
+			$('.spu-box' ).on(event, function(event) {
+				event.stopPropagation();
+			});
 
 			//hide boxes and remove left-99999px we cannot since beggining of facebook won't display
 			$box.hide().css('left','');
 
 			// add box to global boxes array
 			$boxes[id] = $box;
-
-
-			if(triggerMethod == 'seconds') {
-				var triggerSeconds = parseInt( $box.data('trigger-number'), 10 );
-			} else {
-				var triggerPercentage = ( triggerMethod == 'percentage' ) ? ( parseInt( $box.data('trigger-number'), 10 ) / 100 ) : 0.8;
-				var triggerHeight = ( triggerPercentage * $(document).height() );
-			}
 
 			// functions that check % of height
 			var triggerHeightCheck = function() 
@@ -132,12 +120,7 @@ jQuery(window).load(function() {
 						if( ! autoHide ) {
 							$(window).unbind('scroll', triggerHeightCheck);
 						}
-						//if is a centered popup, center it
-						if( $box.hasClass('spu-centered') ) {
 
-							centerBox( id );
-							
-						}
 						toggleBox( id, true );
 					} else {
 						toggleBox( id, false );
@@ -153,19 +136,14 @@ jQuery(window).load(function() {
 				}
 
 				timer = window.setTimeout(function() { 
-					//if is a centered popup, center it
-					if( $box.hasClass('spu-centered') ) {
 
-						centerBox( id );
-							
-					}
 					toggleBox( id, true );					
 
 				}, triggerSeconds * 1000);
 			}
 
 			// show box if cookie not set or if in test mode
-			var cookieValue = readCookie( 'spu_box_' + id );
+			var cookieValue = spuReadCookie( 'spu_box_' + id );
 
 			if( cookieValue == undefined || ( isAdmin && testMode ) ) {
 				
@@ -204,7 +182,11 @@ jQuery(window).load(function() {
 			});
 			
 			// add link listener for this box
-			$('a[href="#' + $box.attr('id') +'"]').click(function() { toggleBox(id, true); return false; });
+			$('a[href="#' + $box.attr('id') +'"]').click(function() { 
+				
+				toggleBox(id, true); 
+				return false;
+			});
 
 		});
 		//function that center popup on screen
@@ -242,8 +224,15 @@ jQuery(window).load(function() {
 				// set cookie
 				var days = parseInt( $box.data('cookie') );
 				if( days > 0 ) {
-					createCookie( 'spu_box_' + id, true, days );
+					spuCreateCookie( 'spu_box_' + id, true, days );
 				}
+			}
+			
+			//if is a centered popup, center it
+			if( $box.hasClass('spu-centered') ) {
+
+				centerBox( id );
+				
 			}
 
 			// show box
@@ -278,7 +267,7 @@ jQuery(window).load(function() {
 /**
  * Cookie functions
  */
-function createCookie(name, value, days) {
+function spuCreateCookie(name, value, days) {
 	if (days) {
 		var date = new Date();
 		date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
@@ -287,7 +276,7 @@ function createCookie(name, value, days) {
 	document.cookie = name + "=" + value + expires + "; path=/";
 }
 
-function readCookie(name) {
+function spuReadCookie(name) {
 	var nameEQ = name + "=";
 	var ca = document.cookie.split(';');
 	for (var i = 0; i < ca.length; i++) {

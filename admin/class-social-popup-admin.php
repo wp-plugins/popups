@@ -43,6 +43,21 @@ class SocialPopup_Admin {
 	protected $plugin_screen_hook_suffix = null;
 
 	/**
+	 * Plugins settings
+	 * @var array
+	 */
+	protected $spu_settings = array();
+
+	/**
+	 * Premium version is enabled
+	 *
+	 * @since    1.1
+	 *
+	 * @var      bool
+	 */
+	protected $premium = false;
+	
+	/**
 	 * Initialize the plugin by loading admin scripts & styles and adding a
 	 * settings page and menu.
 	 *
@@ -57,10 +72,18 @@ class SocialPopup_Admin {
 		//settings name
 		$this->options_name		= $this->plugin_slug .'_settings';
         
-					
+        //load settings
+		$this->spu_settings 	= $plugin->get_settings();
+
+		//premium version ?
+		$this->premium 			= defined('SPUP_PLUGIN_HOOK');
+
 		//Register cpt
 		add_action( 'init', array( $this, 'register_cpt' ) );
 
+		// add settings page
+		add_action('admin_menu' , array( $this, 'add_settings_menu' ) );
+		
 		//Add our metaboxes
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 		//Save metaboxes
@@ -159,9 +182,50 @@ class SocialPopup_Admin {
 	}
 
 	/**
+	 * Add menu for Settings page of the plugin
+	 * @since  1.1
+	 * @return  void
+	 */
+	public function add_settings_menu() {
+
+		add_submenu_page('edit.php?post_type=spucpt', 'Settings', 'Settings', 'edit_posts', 'spu_settings', array( $this, 'settings_page' ) );
+	
+	}
+
+	/**
+	 * Settings page of the plugin
+	 * @since  1.1
+	 * @return  void
+	 */	
+	public function settings_page(){
+
+		if (  isset( $_POST['spu_nonce'] ) && wp_verify_nonce( $_POST['spu_nonce'], 'spu_save_settings' ) ) {
+
+			update_option( 'spu_settings' , esc_sql( $_POST['spu_settings'] ) );
+		
+		}	
+		$opts = apply_filters('spu/settings_page/opts', get_option( 'spu_settings' ) );
+
+		include 'views/settings-page.php';
+
+	}
+	/**
 	 * Register the metaboxes for our cpt and remove others
 	 */
 	public function add_meta_boxes() {
+
+		if( !$this->premium ) {
+
+			add_meta_box(
+				'spu-premium',
+				__( 'Popups Premium', $this->plugin_slug ),
+				array( $this, 'popup_premium' ),
+				'spucpt',
+				'normal',
+				'core'
+			);
+
+		}
 
 		add_meta_box(
 			'spu-help',
@@ -216,10 +280,21 @@ class SocialPopup_Admin {
 	}
 
 	/**
+	 * Include the metabox view for popup premium
+	 * @param  object $post    spucpt post object
+	 * @param  array $metabox full metabox items array
+	 * @since 1.1
+	 */
+	public function popup_premium( $post, $metabox ) {
+
+		include 'views/metabox-premium.php';
+	}
+
+	/**
 	 * Include the metabox view for popup help
 	 * @param  object $post    spucpt post object
 	 * @param  array $metabox full metabox items array
-	 * @since 2.0
+	 * @since 1.1
 	 */
 	public function popup_help( $post, $metabox ) {
 
@@ -229,7 +304,7 @@ class SocialPopup_Admin {
 	 * Include the metabox view for popup rules
 	 * @param  object $post    spucpt post object
 	 * @param  array $metabox full metabox items array
-	 * @since 2.0
+	 * @since 1.1
 	 */
 	public function popup_rules( $post, $metabox ) {
 
@@ -241,7 +316,7 @@ class SocialPopup_Admin {
 	 * Include the metabox view for popup options
 	 * @param  object $post    spucpt post object
 	 * @param  array $metabox full metabox items array
-	 * @since 2.0
+	 * @since 1.1
 	 */
 	public function popup_options( $post, $metabox ) {
 		
@@ -254,7 +329,7 @@ class SocialPopup_Admin {
 	 * Include the metabox view for donate box
 	 * @param  object $post    spucpt post object
 	 * @param  array $metabox full metabox items array
-	 * @since 2.0
+	 * @since 1.1
 	 */
 	public function metabox_donate( $post, $metabox ) {
 		include 'views/metabox-donate.php';
@@ -263,7 +338,7 @@ class SocialPopup_Admin {
 	 * Include the metabox view for support box
 	 * @param  object $post    spucpt post object
 	 * @param  array $metabox full metabox items array
-	 * @since 2.0
+	 * @since 1.1
 	 */
 	public function metabox_support( $post, $metabox ) {
 		include 'views/metabox-support.php';
@@ -273,7 +348,7 @@ class SocialPopup_Admin {
 	 * Include the metabox view for links box
 	 * @param  object $post    spucpt post object
 	 * @param  array $metabox full metabox items array
-	 * @since 2.0
+	 * @since 1.1
 	 */
 	public function metabox_links( $post, $metabox ) {
 		include 'views/metabox-links.php';
@@ -520,5 +595,6 @@ class SocialPopup_Admin {
 
 		return $args;
 	}	
+
 
 }
