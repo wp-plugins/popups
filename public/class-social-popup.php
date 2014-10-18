@@ -23,7 +23,7 @@ class SocialPopup {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.1.1';
+	const VERSION = '1.2';
 
 	/**
 	 * Popups to use acrros files
@@ -340,12 +340,12 @@ class SocialPopup {
 			wp_register_script( 'spu-facebook', 'http://connect.facebook.net/'.get_locale().'/all.js#xfbml=1', array('jquery'), self::VERSION, FALSE);
 
 		}
-		if( ! defined( 'SPU_UNLOAD_TW_JS')  && empty( $opts['google'] ) ) {
+		if( ! defined( 'SPU_UNLOAD_TW_JS')  && empty( $opts['twitter'] ) ) {
 		
 			wp_register_script( 'spu-twitter', 'http://platform.twitter.com/widgets.js', array('jquery'), self::VERSION, FALSE);
 		
 		}
-		if( ! defined( 'SPU_UNLOAD_GO_JS')  && empty( $opts['twitter'] ) ) {
+		if( ! defined( 'SPU_UNLOAD_GO_JS')  && empty( $opts['google'] ) ) {
 			
 			wp_register_script( 'spu-google', 'https://apis.google.com/js/plusone.js', array('jquery'), self::VERSION, FALSE);
 
@@ -404,7 +404,7 @@ class SocialPopup {
 			
 			wp_enqueue_script('spu-public');
 			wp_enqueue_style('spu-public-css');
-			wp_localize_script( 'spu-public', 'spuvar', array( 'is_admin' => current_user_can( 'administrator' ), 'disable_style' => $this->spu_settings['shortcodes_style'] ) );
+			wp_localize_script( 'spu-public', 'spuvar', array( 'is_admin' => current_user_can( 'administrator' ), 'disable_style' => $this->spu_settings['shortcodes_style'], 'safe_mode' => $this->spu_settings['safe'] ) );
 
 			if( $facebook ){
 				wp_enqueue_script( 'spu-facebook' );

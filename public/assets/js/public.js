@@ -18,6 +18,12 @@ jQuery(window).load(function() {
 		// loop through boxes
 		$(".spu-box").each(function() {
 
+			// move to parent in safe mode
+			if( spuvar.safe_mode ){
+
+				$(this).prependTo('body');
+				
+			}
 
 			// vars
 			var $box 			= $(this);
@@ -31,6 +37,7 @@ jQuery(window).load(function() {
 			var triggerPercentage = ( triggerMethod == 'percentage' ) ? ( parseInt( $box.data('trigger-number'), 10 ) / 100 ) : 0.8;
 			var triggerHeight 	= ( triggerPercentage * $(document).height() );
 			
+			facebookFix( $box );
 			//correct widths of sharing icons
 			$('.spu-google').width($('.spu-google').width()-20);
 			$('.spu-twitter').width($('.spu-twitter').width()-12);
@@ -92,7 +99,7 @@ jQuery(window).load(function() {
 				toggleBox( id, false );
 			});
 			//not on the box
-			$('.spu-box' ).on(event, function(event) {
+			$('body' ).on(event,'.spu-box', function(event) {
 				event.stopPropagation();
 			});
 
@@ -189,6 +196,7 @@ jQuery(window).load(function() {
 			});
 
 		});
+	
 		//function that center popup on screen
 		function centerBox( id ) {
 			var $box 			= $boxes[id];
@@ -203,6 +211,29 @@ jQuery(window).load(function() {
 			});
 		}
 
+		//facebookBugFix
+		function facebookFix( box ) {
+
+			// Facebook bug that fails to resize
+			var $fbbox = $(box).find('.spu-facebook');
+			if( $fbbox.length ){
+				//if exist and width is 0
+				var $fbwidth = $fbbox.find('.fb-like > span').width();
+				if ( $fbwidth == 0 ) {
+					var $fblayout = $fbbox.find('.fb-like').data('layout');
+					 if( $fblayout == 'box_count' ) {
+
+					 	$fbbox.append('<style type="text/css"> #'+$(box).attr('id')+' .fb-like iframe, #'+$(box).attr('id')+' .fb_iframe_widget span, #'+$(box).attr('id')+' .fb_iframe_widget{ height: 63px !important;width: 80px !important;}</style>');
+
+					 } else {
+						
+						$fbbox.append('<style type="text/css"> #'+$(box).attr('id')+' .fb-like iframe, #'+$(box).attr('id')+' .fb_iframe_widget span, #'+$(box).attr('id')+' .fb_iframe_widget{ height: 20px !important;width: 80px !important;}</style>');
+
+					 }	
+				}
+			}
+		}
+		
 		//function that show/hide box
 		function toggleBox( id, show ) {
 			var $box 	= $boxes[id];
@@ -226,29 +257,32 @@ jQuery(window).load(function() {
 				if( days > 0 ) {
 					spuCreateCookie( 'spu_box_' + id, true, days );
 				}
+			} else {
+
+				//if is a centered popup, center it
+				if( $box.hasClass('spu-centered') ) {
+
+					centerBox( id );
+					
+				}
+			
 			}
 			
-			//if is a centered popup, center it
-			if( $box.hasClass('spu-centered') ) {
-
-				centerBox( id );
-				
-			}
-
 			// show box
-			var animation = $box.data('animation');
+			var animation = $box.data('spuanimation');
 
 			if( animation === 'fade' ) {
 				$box.fadeToggle( 'slow' );
 			} else {
 				$box.slideToggle( 'slow' );
 			}
+				
+			//background
 			if( show === true && $bgopa > 0 ){
 				$bg.fadeIn();
 			} else {
 				$bg.fadeOut();
 			}
-
 			return show;
 		}
 
