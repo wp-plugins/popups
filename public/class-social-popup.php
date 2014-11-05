@@ -23,7 +23,7 @@ class SocialPopup {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.2';
+	const VERSION = '1.2.1';
 
 	/**
 	 * Popups to use acrros files
@@ -380,21 +380,22 @@ class SocialPopup {
 				$matches = true;
 				$spu_matches[] = $spu->ID;
 				
-				$total_shortcodes[$spu->ID] = 0;
+				$total_shortcodes[$spu->ID] 	= array();
+				$total_shortcodes[$spu->ID][0] 	= 0;
 
 				//if we have matches we check for shortcodes to add scripts later
 				if( has_shortcode( $spu->post_content, 'spu-facebook' ) ){
 					$facebook = true;
-					$total_shortcodes[$spu->ID]++;
+					$total_shortcodes[$spu->ID][0]++;
 				}				
 				if( has_shortcode( $spu->post_content, 'spu-twitter' ) ){
 					$twitter = true;
-					$total_shortcodes[$spu->ID]++;
+					$total_shortcodes[$spu->ID][0]++;
 				}			
 				if( has_shortcode( $spu->post_content, 'spu-google' ) ){
 					$google = true;
-					$total_shortcodes[$spu->ID]++;
-					$total_shortcodes['google'] = true;
+					$total_shortcodes[$spu->ID][0]++;
+					$total_shortcodes[$spu->ID]['google'] = true;
 				}
 			}
 		}
@@ -404,7 +405,13 @@ class SocialPopup {
 			
 			wp_enqueue_script('spu-public');
 			wp_enqueue_style('spu-public-css');
-			wp_localize_script( 'spu-public', 'spuvar', array( 'is_admin' => current_user_can( 'administrator' ), 'disable_style' => $this->spu_settings['shortcodes_style'], 'safe_mode' => $this->spu_settings['safe'] ) );
+			wp_localize_script( 'spu-public', 'spuvar', 
+				array( 
+					'is_admin' 		=> current_user_can( 'administrator' ), 
+					'disable_style' => @$this->spu_settings['shortcodes_style'], 
+					'safe_mode'		=> @$this->spu_settings['safe'] 
+				) 
+			);
 
 			if( $facebook ){
 				wp_enqueue_script( 'spu-facebook' );
