@@ -1,4 +1,4 @@
-jQuery(window).load(function() {
+
 	window.SPU = (function($) {
 
 		var windowHeight 	= $(window).height();
@@ -95,8 +95,12 @@ jQuery(window).load(function() {
 			event = (ua.match(/iPad/i) || ua.match(/iPhone/i)) ? "touchstart" : "click";
 			
 			$('body').on(event, function (ev) {
-				console.log(event.target);
-				toggleBox( id, false );
+				// test that event is user triggered and not programatically
+				if( ev.which ) {
+
+					toggleBox( id, false );
+					
+				}				
 			});
 			//not on the box
 			$('body' ).on(event,'.spu-box', function(event) {
@@ -194,11 +198,30 @@ jQuery(window).load(function() {
 				toggleBox(id, true); 
 				return false;
 			});
+
+			// add class to the gravity form if they exist within the box
+			$box.find('.gform_wrapper form').addClass('gravity-form');
+
             // Add generic form tracking
              $box.find('form:not(".wpcf7-form, .gravity-form")').submit( function(e){
              	e.preventDefault();
-                var submit = true;
-                toggleBox(id, false );
+                
+                var submit 	= true,
+                form 		= $(this),
+                data 	 	= form.serialize(),
+                url  	 	= form.attr('action'),
+                success_cb 	= function (data){
+                	var response = $(data).filter('#spu-'+ id ).html();
+                	$('#spu-' + id ).html(response);
+                	// give 2 seconds for response
+                	setTimeout( function(){
+
+                		toggleBox(id, false );
+                		
+                	}, spuvar.seconds_confirmation_close);
+                }
+                // Send form by ajax and replace popup with response
+                request(data, url, success_cb, '', 'html');
 
                 return submit;
              });
@@ -305,19 +328,52 @@ jQuery(window).load(function() {
 			}
 			return show;
 		}
+		// AJAX REQUESTS
+       	function request(data, url, success_cb, error_cb){
+            // Prepare variables.
+            var ajax       = {
+                    url:      spuvar.ajax_url,
+                    data:     data,
+                    cache:    false,
+                    type:     'POST',
+                    dataType: 'json',
+                    timeout:  30000
+                },
+                success_cb = success_cb || false,
+                error_cb   = error_cb   || false;
 
-	return {
-		show: function( box_id ) {
-			return toggleBox( box_id, true );
-		},
-		hide: function( box_id ) {
-			return toggleBox( box_id, false );
+            // Set ajax url is supplied
+            if ( url ) {
+                ajax.url = url;
+            }
+            // Set success callback if supplied.
+            if ( success_cb ) {
+                ajax.success = success_cb;
+            }
+
+            // Set error callback if supplied.
+            if ( error_cb ) {
+                ajax.error = error_cb;
+            }
+
+            // Make the ajax request.
+            $.ajax(ajax);
+    	}
+		return {
+			show: function( box_id ) {
+				return toggleBox( box_id, true );
+			},
+			hide: function( box_id ) {
+				return toggleBox( box_id, false );
+			},
+			request: function( data, url, success_cb, error_cb ) {
+				return request( data, url, success_cb, error_cb );
+			}
 		}
-	}
 
 	})(window.jQuery);
 
-});
+
 /**
  * Cookie functions
  */
