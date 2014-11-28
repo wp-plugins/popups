@@ -23,7 +23,7 @@ class SocialPopup {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.2.1';
+	const VERSION = '1.2.2.1';
 
 	/**
 	 * Popups to use acrros files
@@ -331,6 +331,8 @@ class SocialPopup {
 		if( defined( 'SPU_DEBUG_MODE' ) || !empty( $opts['debug'] ) ) {
 			$js_url = plugins_url( 'assets/js/public.js', __FILE__ );
 		}
+
+
 		wp_register_style( 'spu-public-css', plugins_url( 'assets/css/public.css', __FILE__ ), array(), self::VERSION );
 		
 		wp_register_script( 'spu-public', $js_url, array( 'jquery' ), self::VERSION, true );
