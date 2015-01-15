@@ -23,7 +23,7 @@ class SocialPopup {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.2.3';
+	const VERSION = '1.2.3.1';
 
 	/**
 	 * Popups to use acrros files
@@ -387,11 +387,11 @@ class SocialPopup {
 		wp_localize_script( 'spu-public', 'spuvar',
 			array(
 				'is_admin' 						=> current_user_can( 'administrator' ),
-				'disable_style' 				=> @$this->spu_settings['shortcodes_style'],
-				'safe_mode'						=> @$this->spu_settings['safe'],
-				'ajax_mode'						=> @$this->spu_settings['ajax_mode'],
+				'disable_style' 				=> isset( $this->spu_settings['shortcodes_style'] ) ? $this->spu_settings['shortcodes_style'] : '',
+				'safe_mode'						=> isset( $this->spu_settings['safe'] ) ? $this->spu_settings['safe'] : '',
+				'ajax_mode'						=> isset( $this->spu_settings['ajax_mode'] ) ? $this->spu_settings['ajax_mode'] :'',
 				'ajax_url'						=> admin_url('admin-ajax.php'),
-				'site_url'						=> site_url(),
+				'ajax_mode_url'					=> site_url('/?spu_action=spu_load'),
 				'pid'						    => get_queried_object_id(),
 				'is_front_page'				    => is_front_page(),
 				'seconds_confirmation_close'	=> apply_filters( 'spu/spuvar/seconds_confirmation_close', 5 ),
@@ -590,10 +590,7 @@ class SocialPopup {
 			echo '<div id="fb-root" class=" fb_reset"></div>';
 			
 		}			
-		
-		if( defined( 'DOING_AJAX' ) ) {
-			die(); //we are in ajax mode
-		}
+	
 	}
 
 	/**
@@ -624,18 +621,15 @@ class SocialPopup {
 	 */
 	function register_spu_ajax() {
   		
-  		if( is_admin() )
-  			return;
-
-	  	if ( empty( $_POST['spu_action'] ) || $_POST['spu_action'] != 'spu_load' ) {
-    		
+	  	if ( empty( $_REQUEST['spu_action'] ) || $_REQUEST['spu_action'] != 'spu_load' ) 
     		return;
-	  
-	  	} 
+	 	
 	  	
 	  	define( 'DOING_AJAX', TRUE );
 
+	  
   		$this->print_boxes();	
+  		
 
   		die();		
 	}
