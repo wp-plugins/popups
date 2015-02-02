@@ -1,7 +1,7 @@
 (function($){
     "use strict";
 
-var SPU = function() {
+var SPU_master = function() {
 
 	var windowHeight 	= $(window).height();
 	var isAdmin 		= spuvar.is_admin;
@@ -42,12 +42,12 @@ var SPU = function() {
 		facebookFix( $box );
 		//correct widths of sharing icons
 		$('.spu-google').width($('.spu-google').width()-20);
-		$('.spu-twitter').width($('.spu-twitter').width()-12);
+		$('.spu-twitter').width($('.spu-twitter ').width()-50);
 		
 		//center spu-shortcodes
 		var swidth 		= 0;
 		var free_width 	= 0;
-		var boxwidth	= $box.width();
+		var boxwidth	= $box.outerWidth();
 		var cwidth 		= $box.find(".spu-content").width();
 		var total  		= $box.data('total'); //total of shortcodes used
 
@@ -67,15 +67,8 @@ var SPU = function() {
 		if( free_width > 0 ) {
 			//leave some margin
 			$(this).find(".spu-shortcode").each(function(){
-				if( total == 3) {
-
-					$(this).css('margin-left',(free_width / (total-1)));
 				
-				} else {
-				
-					$(this).css('margin-left',(free_width / 2 ));
-				
-				}
+				$(this).css('margin-left',(free_width / 2 ));
 
 			});
 			//remove margin when neccesary
@@ -261,17 +254,43 @@ var SPU = function() {
 	
 
 	//function that center popup on screen
-	function centerBox( id ) {
+	function fixSize( id ) {
 		var $box 			= $boxes[id];
 		var windowWidth 	= $(window).width();
 		var windowHeight 	= $(window).height();
-		var popupHeight 	= $box.height();
-		var popupWidth 		= $box.width();
-		$box.css({
-			"position": "fixed",
-			"top": windowHeight / 2 - popupHeight / 2,
-			"left": windowWidth / 2 - popupWidth / 2
-		});
+		var popupHeight 	= $box.outerHeight();
+		var popupWidth 		= $box.outerWidth();
+		var intentWidth		= $box.data('width');
+		var left 			= 0;
+		var top 			= windowHeight / 2 - popupHeight / 2;
+		var position 		= 'fixed';
+		var currentScroll   = $(document).scrollTop();
+
+		if( $box.hasClass('spu-centered') ){
+			if( intentWidth < windowWidth ) {
+				left = windowWidth / 2 - popupWidth / 2;
+			}
+			$box.css({
+				"left": 	left,
+				"position": position,
+				"top": 		top,
+			});
+		}
+
+		// if popup is higher than viewport we need to make it absolute
+		if( (popupHeight + 50) > windowHeight ) {
+			position 	= 'absolute';
+			top 		= currentScroll;
+			
+			$box.css({
+				"position": position,
+				"top": 		top,
+				"bottom": 	"auto",
+				//"right": 	"auto",
+				//"left": 	"auto",
+			});
+		}
+
 	}
 
 	//facebookBugFix
@@ -322,17 +341,16 @@ var SPU = function() {
 			}
 		} else {
 
-			//if is a centered popup, center it
-			if( $box.hasClass('spu-centered') ) {
-				//bind for resize
-				$(window).resize(function(){
-					
-					centerBox( id );
-
-				});
-				centerBox( id );
+			
+			//bind for resize
+			$(window).resize(function(){
 				
-			}
+				fixSize( id );
+
+			});
+			fixSize( id );
+				
+			
 		
 		}
 		
@@ -377,7 +395,7 @@ if( spuvar.ajax_mode ) {
     	
     	$('body').append(response);
     	reload_socials();
-    	SPU();
+    	window.SPU = SPU_master();
     	
     	
     },
@@ -389,7 +407,7 @@ if( spuvar.ajax_mode ) {
 
 	jQuery(window).load(function() {
 
-		SPU();
+		window.SPU = SPU_master();
 	
 	});
 }
@@ -490,8 +508,6 @@ function spuReadCookie(name) {
             var box_id = $(html_element).parents('.spu-box').data('box-id');
             if( box_id) {
                 SPU.hide(box_id);
-                //Track the conversion.
-                SPU.track( box_id, true);
             }
         });
         SPUfb = true;
