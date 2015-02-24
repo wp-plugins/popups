@@ -54,11 +54,11 @@ var SPU_master = function() {
 
 
 		//wrap them all
-		$(".spu-shortcode").wrapAll('<div class="spu_shortcodes"/>');
+		$box.find(".spu-shortcode").wrapAll('<div class="spu_shortcodes"/>');
 		if( total && ! spuvar.disable_style && $(window).width() > boxwidth ){ 
 		
 			//calculate total width of shortcodes all togheter
-			$(this).find(".spu-shortcode").each(function(){
+			$box.find(".spu-shortcode").each(function(){
 				swidth = swidth + $(this).width();
 			});
 			//available space to split margins
@@ -67,19 +67,19 @@ var SPU_master = function() {
 		}
 		if( free_width > 0 ) {
 			//leave some margin
-			$(this).find(".spu-shortcode").each(function(){
-				
-				$(this).css('margin-left',(free_width / 2 ));
+			$box.find(".spu-shortcode").each(function(){
+
+                $(this).css('margin-left',(free_width / 2 ));
 
 			});
 			//remove margin when neccesary
 			if( total == 2) {
 
-				$(this).find(".spu-shortcode").last().css('margin-left',0);
+				$box.find(".spu-shortcode").last().css('margin-left',0);
 
 			} else if( total == 3) {
 
-				$(this).find(".spu-shortcode").first().css('margin-left',0);
+				$box.find(".spu-shortcode").first().css('margin-left',0);
 			
 			}
 		}
@@ -235,18 +235,20 @@ var SPU_master = function() {
             // Send form by ajax and replace popup with response
             request(data, url, success_cb, error_cb, 'html');
 
+            $box.trigger('spu.form_submitted', [id]);
+
             return submit;
          });
 
         // CF7 support
         $('body').on('mailsent.wpcf7', function(){
-     
+            $box.trigger('spu.form_submitted', [id]);
         	toggleBox(id, false ); 
         }); 
 
         // Gravity forms support (only AJAX mode)
         $(document).on('gform_confirmation_loaded', function(){
-        	
+            $box.trigger('spu.form_submitted', [id]);
         	toggleBox(id, false ); 
         });
 
@@ -339,9 +341,9 @@ var SPU_master = function() {
 			if( days > 0 ) {
 				spuCreateCookie( 'spu_box_' + id, true, days );
 			}
+            $box.trigger('spu.box_close', [id]);
 		} else {
-
-			
+            $box.trigger('spu.box_open', [id]);
 			//bind for resize
 			$(window).resize(function(){
 				
@@ -395,7 +397,7 @@ if( spuvar.ajax_mode ) {
     	
     	$('body').append(response);
     	window.SPU = SPU_master();
-		SPU_clean_action_forms(); //remove spu_Action from forms
+		SPU_reload_forms(); //remove spu_Action from forms
     	
     },
     error_cb 	= function (data, error, errorThrown){
@@ -410,8 +412,6 @@ if( spuvar.ajax_mode ) {
 	
 	});
 }
-
-
 
     /**
      * Ajax requests
@@ -559,10 +559,14 @@ function SPU_reload_socials(){
 		twttr.widgets.load();
 	}
 }
-function SPU_clean_action_forms(){
+function SPU_reload_forms(){
+	// Clear actions
 	$('.spu-box form').each( function(){
 		var action = $(this).attr('action');
 		$(this).attr('action' , action.replace('?spu_action=spu_load',''));
 	});
+	if ($.fn.wpcf7InitForm) {
+		$('.spu-box div.wpcf7 > form').wpcf7InitForm();
+	}
 }
 })(jQuery);

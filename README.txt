@@ -3,8 +3,8 @@ Contributors: timersys
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=K4T6L69EV9G2Q
 Tags:  twitter,google+, facebook,Popups, twitter follow, facebook like, google plus,social boost, social splash, popup, facebook popup, scroll popups, popups, wordpress popup, wp popups
 Requires at least: 3.6
-Tested up to: 4.1
-Stable tag: 1.2.3.3
+Tested up to: 4.1.1
+Stable tag: 1.2.3.4
 Text Domain: spucpt
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -24,10 +24,12 @@ There are multiple display filters that can be combined:
 * Filter users that never commented
 * Filter users that arrived via another page on your site
 * Filter users via roles
+* Show popup depending on referrer
 * Show popup to logged / non logged users
 * Show or not to mobile and tablet users
 * Show depending on post type, post template, post name, post format, post status and post taxonomy
 * Show depending on page template, if page is parent, page name, page type
+* Geotarget popups using the [Geotargeting plugin](http://wp.timersys.com/geotargeting/)
 
 = Available Settings =
 
@@ -103,6 +105,15 @@ Yes you can add the ([following codes](https://gist.github.com/timersys/84536144
 Yes if you need to debug you can use uncompressed javascript by addings ([this code](https://gist.github.com/timersys/60823b62cd1050dab032)) to your functions.php
 
 == Changelog ==
+
+= 1.2.3.4 =
+
+* Added referrer display rule
+* Fixed spuvar_social undefined when not using wordpress jquery
+* Fixed wpml support in ajax mode
+* Added trigger events in javascript so devs can hook in
+* Added geotargeting support in popups using [Geotargeting plugin](http://wp.timersys.com/geotargeting/)
+* Fixed undefined variable in admin
 
 = 1.2.3.3 =
 
