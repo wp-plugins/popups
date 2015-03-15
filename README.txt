@@ -1,10 +1,10 @@
 === Popups - WordPress Popup ===
 Contributors: timersys
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=K4T6L69EV9G2Q
-Tags:  twitter,google+, facebook,Popups, twitter follow, facebook like, google plus,social boost, social splash, popup, facebook popup, scroll popups, popups, wordpress popup, wp popups
+Tags:  twitter,google+, facebook,Popups, twitter follow, facebook like, google plus,social boost, social splash, popup, facebook popup, scroll popups, popups, wordpress popup, wp popups, cf7, gf, gravity forms, contact form 7, ifs, infusion soft, subscribe
 Requires at least: 3.6
 Tested up to: 4.1.1
-Stable tag: 1.2.3.4
+Stable tag: 1.2.3.5
 Text Domain: spucpt
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -41,6 +41,7 @@ There are multiple display filters that can be combined:
 * Days until popup shows again
 * Ajax mode to make popups cache compatible
 * Shortcodes for social networks available
+* Compatible with Gravity Forms, Infusion Soft, Contact form 7, jetpack forms and much more
 
 > <strong>Premium Version</strong><br>
 > 
@@ -105,6 +106,13 @@ Yes you can add the ([following codes](https://gist.github.com/timersys/84536144
 Yes if you need to debug you can use uncompressed javascript by addings ([this code](https://gist.github.com/timersys/60823b62cd1050dab032)) to your functions.php
 
 == Changelog ==
+
+= 1.2.3.5 =
+
+* Added IFS (infusion soft) support
+* Added display rule - Post ID
+* Added display rule - Categories / Archives
+* Now both version are shown if you use premium
 
 = 1.2.3.4 =
 

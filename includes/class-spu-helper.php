@@ -133,6 +133,8 @@ class Spu_Helper {
 					'all_pages'		=>	__("All Pages", self::$plugin_slug),
 					'front_page'	=>	__("Front Page", self::$plugin_slug),
 					'posts_page'	=>	__("Posts Page", self::$plugin_slug),
+					'category_page'	=>	__("Category Page", self::$plugin_slug),
+					'archive_page'	=>	__("Archives Page", self::$plugin_slug),
 					'top_level'		=>	__("Top Level Page (parent of 0)", self::$plugin_slug),
 					'parent'		=>	__("Parent Page (has children)", self::$plugin_slug),
 					'child'			=>	__("Child Page (has parent)", self::$plugin_slug),
@@ -266,7 +268,7 @@ class Spu_Helper {
 		// allow custom rules rules
 		$choices = apply_filters( 'spu/rules/rule_values/' . $options['param'], $choices );
 
-		if( $options['param'] == 'referrer' ) {
+		if( $options['param'] == 'referrer' || $options['param'] == 'post_id' ) {
 			self::print_textfield( $options );
 		} else {
 			self::print_select( $choices, $options );

@@ -15,11 +15,23 @@ class Spu_Rules
 	protected $post_id;
 	
 	/**
-	 * referred using in ajax calls
+	 * referrer using in ajax calls
 	 * @var string
 	 */
 	protected $referrer;
-	
+
+	/**
+	 * Is category using in ajax calls
+	 * @var boolean
+	 */
+	protected $is_category = false;
+
+	/**
+	 * Is archive using in ajax calls
+	 * @var boolean
+	 */
+	protected $is_archive = false;
+
 	/*
 	*  __construct
 	*  Add all the filters to use later
@@ -38,6 +50,7 @@ class Spu_Rules
 
 		// Post
 		add_filter('spu/rules/rule_match/post_type', array($this, 'rule_match_post_type'), 10, 2);
+		add_filter('spu/rules/rule_match/post_id', array($this, 'rule_match_post'), 10, 2);
 		add_filter('spu/rules/rule_match/post', array($this, 'rule_match_post'), 10, 2);
 		add_filter('spu/rules/rule_match/post_category', array($this, 'rule_match_post_category'), 10, 2);
 		add_filter('spu/rules/rule_match/post_format', array($this, 'rule_match_post_format'), 10, 2);
@@ -63,8 +76,14 @@ class Spu_Rules
 			if( isset( $_REQUEST['pid'] ) ) {
 				$this->post_id = $_REQUEST['pid'];
 			}
-			if( isset( $_REQUEST['referrer'] ) ) {
+			if( !empty( $_REQUEST['referrer'] ) ) {
 				$this->referrer = $_REQUEST['referrer'];
+			}
+			if( !empty( $_REQUEST['is_category'] ) ) {
+				$this->is_category = true;
+			}
+			if( !empty( $_REQUEST['is_archive'] ) ) {
+				$this->is_archive = true;
 			}
 		}
 		
@@ -394,6 +413,53 @@ class Spu_Rules
 
 	      	}
 	        
+        }
+        elseif( $rule['value'] == 'category_page') {
+
+	        if( defined( 'DOING_AJAX') ) {
+		        if($rule['operator'] == "==") {
+
+			        $match = $this->is_category;
+
+		        } elseif($rule['operator'] == "!=") {
+
+			        $match = !$this->is_category;
+
+		        }
+	        } else {
+		        if ( $rule['operator'] == "==" ) {
+
+			        $match = is_category();
+
+		        } elseif ( $rule['operator'] == "!=" ) {
+
+			        $match = ! is_category();
+
+		        }
+	        }
+        }
+        elseif( $rule['value'] == 'archive_page') {
+	        if( defined( 'DOING_AJAX') ) {
+		        if($rule['operator'] == "==") {
+
+			        $match = $this->is_archive;
+
+		        } elseif($rule['operator'] == "!=") {
+
+			        $match = !$this->is_archive;
+
+		        }
+	        } else {
+		        if ( $rule['operator'] == "==" ) {
+
+			        $match = is_archive();
+
+		        } elseif ( $rule['operator'] == "!=" ) {
+
+			        $match = ! is_archive();
+
+		        }
+	        }
         }
         elseif( $rule['value'] == 'posts_page') {
         
