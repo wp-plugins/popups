@@ -12,9 +12,6 @@
 
 define( 'SPU_ADMIN_DIR' , plugin_dir_path(__FILE__) );
 
-// Include Helper class
-include_once( SPU_PLUGIN_DIR . 'includes/class-spu-helper.php' );
-
 
 /**
  * Admin Class of the plugin
@@ -118,7 +115,7 @@ class SocialPopup_Admin {
 
 		//Tinymce
 		add_filter( 'tiny_mce_before_init', array($this, 'tinymce_init') );
-
+		add_action( 'admin_init', array( $this, 'editor_styles' ) );
 	}
 
 	/**
@@ -218,12 +215,6 @@ class SocialPopup_Admin {
 	 */	
 	public function settings_page() {
 
-		if ( isset( $_POST['spu_nonce'] ) && wp_verify_nonce( $_POST['spu_nonce'], 'spu_save_settings' ) ) {
-
-			update_option( 'spu_settings', esc_sql( @$_POST['spu_settings'] ) );
-
-		}
-
 		$defaults = array(
 			'debug'            => '',
 			'safe'             => '',
@@ -232,8 +223,14 @@ class SocialPopup_Admin {
 			'google'           => '',
 			'twitter'          => '',
 		);
-
 		$opts = apply_filters( 'spu/settings_page/opts', get_option( 'spu_settings', $defaults ) );
+
+		if ( isset( $_POST['spu_nonce'] ) && wp_verify_nonce( $_POST['spu_nonce'], 'spu_save_settings' ) ) {
+			$opts = array_merge(esc_sql( @$_POST['spu_settings'] ), $opts);
+			update_option( 'spu_settings' , $opts );
+		}
+
+
 
 		include 'views/settings-page.php';
 
@@ -397,8 +394,8 @@ class SocialPopup_Admin {
 	 * Saves popup options and rules
 	 *
 	 * @param $post_id
-	 * @param $post
-	 * @param $update
+	 *
+	 * @return mixed
 	 */
 	public function save_meta_options( $post_id ) {
 		// Verify that the nonce is set and valid.
@@ -533,11 +530,14 @@ class SocialPopup_Admin {
 	 * @return    null    Return early if no settings page is registered.
 	 */
 	public function enqueue_admin_scripts() {
-		global $pagenow;
+		global $pagenow, $post;
 
 		if ( get_post_type() !== 'spucpt' || !in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) ) {
 			return;
 		}
+
+		$box_id = isset( $post->ID ) ? $post->ID : '';
+
 		wp_enqueue_script( 'wp-color-picker' );
 		wp_enqueue_script( 'spu-admin-js', plugins_url( 'assets/js/admin.js', __FILE__ ) , '', SocialPopup::VERSION );
 		wp_localize_script( 'spu-admin-js', 'spu_js', 
@@ -546,8 +546,17 @@ class SocialPopup_Admin {
 					'nonce' 	=> wp_create_nonce( 'spu_nonce' ),
 					'l10n'		=> array (
 							'or'	=> __('or', $this->plugin_slug )
-						) 
+						),
+					'opts'      => $this->helper->get_box_options($box_id)
 				) 
+		);
+
+		wp_localize_script( 'spup-admin-js' , 'spup_js' ,
+				array(
+					'opts'      => $this->helper->get_box_options($box_id),
+					'spinner'   => SPU_PLUGIN_URL . 'public/assets/img/ajax-loader.gif'
+
+				)
 		);
 	}
 
@@ -668,9 +677,16 @@ class SocialPopup_Admin {
 			return $args;
 		}
 
-		$args['setup'] = 'function(ed) { if(typeof SPU_ADMIN === \'undefined\') { return; } ed.onInit.add(SPU_ADMIN.onTinyMceInit); }';
+		$args['setup'] = 'function(ed) { if(typeof SPU_ADMIN === \'undefined\') { return; } ed.onInit.add(SPU_ADMIN.onTinyMceInit);if(typeof SPUP_ADMIN === \'undefined\') { return; } ed.onInit.add(SPUP_ADMIN.onTinyMceInit); }';
 
 		return $args;
 	}
 
+	/**
+	 * Add the stylesheet for optin in editor
+	 * @since 1.2.3.6
+	 */
+	function editor_styles() {
+		add_editor_style( SPU_PLUGIN_URL .'admin/assets/css/editor-style.css' );
+	}
 }

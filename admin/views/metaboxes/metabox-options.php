@@ -41,7 +41,6 @@ if ( !defined( 'ABSPATH' ) ) exit;?>
 			<label><input type="radio" id="spu_auto_hide_0" name="spu[auto_hide]" value="0" <?php checked($opts['auto_hide'], 0); ?> /> <?php _e( 'No' ); ?></label> &nbsp;
 			<p class="help"><?php _e( 'Hide box again when visitors scroll back up? Only works when Trigger action is set to % of page height', $this->plugin_slug ); ?></p>
 		</td>
-		
 	</tr>
 	<tr valign="top">
 	<th><label><?php _e( 'Animation', $this->plugin_slug ); ?></label></th>
@@ -71,46 +70,61 @@ if ( !defined( 'ABSPATH' ) ) exit;?>
 			<p class="help"><?php _e( 'If test mode is enabled, the box will show up regardless of whether a cookie has been set. (To admins only)', $this->plugin_slug ); ?></p>
 		</td>
 	</tr>
+	<tr valign="top" class="conversion_close">
+		<th><label for="spu_conversion_close"><?php _e( 'Close on conversion?', $this->plugin_slug ); ?></label></th>
+		<td colspan="3">
+			<label><input type="radio" id="spu_conversion_close_1" name="spu[conversion_close]" value="1" <?php checked($opts['conversion_close'], 1); ?> /> <?php _e( 'Yes' ); ?></label> &nbsp;
+			<label><input type="radio" id="spu_conversion_close_0" name="spu[conversion_close]" value="0" <?php checked($opts['conversion_close'], 0); ?> /> <?php _e( 'No' ); ?></label> &nbsp;
+			<p class="help"><?php _e( 'If you have a form or social shortcode, by default popup will close on submission/conversion', $this->plugin_slug ); ?></p>
+		</td>
+	</tr>
+	<tr valign="top" class="powered_link">
+		<th><label for="spu_powered_link"><?php _e( 'Show powered by link?', $this->plugin_slug ); ?></label></th>
+		<td colspan="3">
+			<label><input type="radio" id="spu_powered_link_1" name="spu[powered_link]" value="1" <?php checked($opts['powered_link'], 1); ?> /> <?php _e( 'Yes' ); ?></label> &nbsp;
+			<label><input type="radio" id="spu_powered_link_0" name="spu[powered_link]" value="0" <?php checked($opts['powered_link'], 0); ?> /> <?php _e( 'No' ); ?></label> &nbsp;
+			<p class="help"><?php echo sprintf(__( 'Shows a "powered by" link below your popup. If your affiliate link is set in the <a href="%s">settings</a>, it will be used.', $this->plugin_slug ), admin_url('edit.php?post_type=spucpt&page=spu_settings')); ?></p>
+		</td>
+	</tr>
 	<?php do_action( 'spu/metaboxes/after_display_options', $opts );?>
 </table>
+	<h3 class="spu-title"><?php _e( 'Appearance', $this->plugin_slug ); ?></h3>
+	<table class="form-table">
+		<?php do_action( 'spu/metaboxes/before_appearance_options', $opts );?>
+		<tr valign="top">
+			<th><label for="spu_bgopacity"><?php _e( 'Background opacity', $this->plugin_slug ); ?></label></th>
+			<td colspan="3">
+				<input type="number" id="spu_bgopacity" name="spu[css][bgopacity]" min="0" step="0.1" max="1" value="<?php echo esc_attr($opts['css']['bgopacity']); ?>" />
+				<p class="help"><?php _e( 'Leave at 0 for no background. Max value is 1', $this->plugin_slug ); ?></p>
+			</td>
 
-<h3 class="spu-title"><?php _e( 'Appearance', $this->plugin_slug ); ?></h3>
-<table class="form-table">
-	<?php do_action( 'spu/metaboxes/before_appearance_options', $opts );?>
-	<tr valign="top">
-		<th><label for="spu_bgopacity"><?php _e( 'Background opacity', $this->plugin_slug ); ?></label></th>
-		<td colspan="3">
-			<input type="number" id="spu_bgopacity" name="spu[css][bgopacity]" min="0" step="0.1" max="1" value="<?php echo esc_attr($opts['css']['bgopacity']); ?>" />
-			<p class="help"><?php _e( 'Leave at 0 for no background. Max value is 1', $this->plugin_slug ); ?></p>
-		</td>
-		
-	</tr>
-	<tr valign="top">
-		<td>
-			<label class="spu-label" for="spu-background-color"><?php _e( 'Background color', $this->plugin_slug ); ?></label>
-			<input id="spu-background-color" name="spu[css][background_color]" type="text" class="spu-color-field" value="<?php echo esc_attr($opts['css']['background_color']); ?>" />
-		</td>
-		<td>
-			<label class="spu-label" for="spu-color"><?php _e( 'Text color', $this->plugin_slug ); ?></label>
-			<input id="spu-color" name="spu[css][color]" type="text" class="spu-color-field" value="<?php echo esc_attr($opts['css']['color']); ?>" />
-		</td>
-		<td>
-			<label class="spu-label" for="spu-width"><?php _e( 'Box width', $this->plugin_slug ); ?></label>
-			<input id="spu-width" name="spu[css][width]" id="spu-box-width" type="text" class="small" value="<?php echo esc_attr($opts['css']['width']); ?>" />
-		</td>
-	</tr>
-	<tr valign="top">
-		<td>
-			<label class="spu-label" for="spu-border-color"><?php _e( 'Border color', $this->plugin_slug ); ?></label>
-			<input name="spu[css][border_color]" id="spu-border-color" type="text" class="spu-color-field" value="<?php echo esc_attr($opts['css']['border_color']); ?>" />
-		</td>
-		<td>
-			<label class="spu-label" for="spu-border-width"><?php _e( 'Border width', $this->plugin_slug ); ?></label>
-			<input name="spu[css][border_width]" id="spu-border-width" type="number" min="0" max="25" value="<?php echo esc_attr($opts['css']['border_width']); ?>" /> px
-		</td>
-		<td></td>
-	</tr>
-	<?php do_action( 'spu/metaboxes/after_appearance_options', $opts );?>
-</table>
+		</tr>
+		<tr valign="top" class="spu-appearance">
+			<td>
+				<label class="spu-label" for="spu-background-color"><?php _e( 'Background color', $this->plugin_slug ); ?></label>
+				<input id="spu-background-color" name="spu[css][background_color]" type="text" class="spu-color-field" value="<?php echo esc_attr($opts['css']['background_color']); ?>" />
+			</td>
+			<td>
+				<label class="spu-label" for="spu-color"><?php _e( 'Text color', $this->plugin_slug ); ?></label>
+				<input id="spu-color" name="spu[css][color]" type="text" class="spu-color-field" value="<?php echo esc_attr($opts['css']['color']); ?>" />
+			</td>
+			<td>
+				<label class="spu-label" for="spu-width"><?php _e( 'Box width', $this->plugin_slug ); ?></label>
+				<input id="spu-width" name="spu[css][width]" id="spu-box-width" type="text" class="small" value="<?php echo esc_attr($opts['css']['width']); ?>" />
+			</td>
+		</tr>
+		<tr valign="top" class="spu-appearance">
+			<td>
+				<label class="spu-label" for="spu-border-color"><?php _e( 'Border color', $this->plugin_slug ); ?></label>
+				<input name="spu[css][border_color]" id="spu-border-color" type="text" class="spu-color-field" value="<?php echo esc_attr($opts['css']['border_color']); ?>" />
+			</td>
+			<td>
+				<label class="spu-label" for="spu-border-width"><?php _e( 'Border width', $this->plugin_slug ); ?></label>
+				<input name="spu[css][border_width]" id="spu-border-width" type="number" min="0" max="25" value="<?php echo esc_attr($opts['css']['border_width']); ?>" /> px
+			</td>
+			<td></td>
+		</tr>
+		<?php do_action( 'spu/metaboxes/after_appearance_options', $opts );?>
+	</table>
 
 <?php wp_nonce_field( 'spu_options', 'spu_options_nonce' ); ?>
