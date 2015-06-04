@@ -313,6 +313,10 @@ var SPU_master = function() {
 		}
 	}
 
+    /**
+     * Check all shortcodes and automatically center them
+     * @param box
+     */
     function centerShortcodes( box ){
         var $box 	= box;
         var total = $box.data('total'); //total of shortcodes used
